@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+ 
+    "name": "LATOCY",
+    "version": "1.0",    
+    "icons": {
+           
+    },
+ 
+    "permissions": ["http://*/","https://*/"],
+    "browser_action": {
+          "default_icon": {
+          },
+          "default_title": "LATOCY",
+          "js":  "popup/popup.js",
+          "default_popup": "popup/popup.html",
+          "content_security_policy":"script-src 'self' https://apis.google.com; object-src 'self'"
+
+    }
+}

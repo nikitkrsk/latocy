@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display&display=swap');
+body{
+    font-family: 'Playfair Display', serif;
+    background-image: linear-gradient( black, rgb(175, 175, 175));
+    color:white;
+    font-size: 1.3em;
+
+}
+button{
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+    padding: 5% 10%;
+    font-size: 1em;
+    border-radius: 10px;
+}
+input{
+    border-radius: 5px;
+    font-size: 1.1em
+}
+p{
+    padding: 0 7%
+}
+#fieldWithResult{
+    color: black;
+}
