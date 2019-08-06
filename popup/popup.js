@@ -6,9 +6,28 @@ function copyDivToClipboard() {
   document.execCommand("copy");
   window.getSelection().removeAllRanges(); // to deselect
 }
+
+
+const checkWord = (word) => {
+  let car = document.getElementById("textIN").value
+  let final = []
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      console.log(JSON.parse(xhr.response))
+        if((JSON.parse(xhr.response).def.length) === 0) {
+          car.split('').forEach(el => final.push(RunScript(el)))
+        }
+    }
+    document.getElementById("fieldWithResult").innerHTML = final.join('')
+}
+  xhr.open('GET', 'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20190806T144714Z.42c689a334e04cc1.d165ba9e4718e173c9410870dabb6f853419e6ec&lang=ru-ru&text=' + word, true);
+  xhr.send(null)
+}
+
 var car;
-function RunScript() {
-  car = document.getElementById("textIN").value;
+function RunScript(car) {
+  console.log(car)
   if (car.includes("pidor")) {
     document.getElementById("fieldWithResult").innerHTML = "сам ты пидор";
   } else {
@@ -98,7 +117,7 @@ function RunScript() {
     car = car.replace(/Йа/g, "Я");
     car = car.replace(/Û/g, "Ю");
     car = car.replace(/Â/g, "Я");
-    document.getElementById("fieldWithResult").innerHTML = car;
+    return car
   }
 }
 function copyDivToClipboardReply() {
@@ -108,7 +127,8 @@ function copyDivToClipboardReply() {
 window.addEventListener("load", function load(event) {
   var runButton = document.getElementById("runButton");
   runButton.addEventListener("click", function() {
-    RunScript();
+    str = document.getElementById("textIN").value;
+    checkWord(RunScript(str));
     copyDivToClipboard();
     copyDivToClipboardReply();
   });
