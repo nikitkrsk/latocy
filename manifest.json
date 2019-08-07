@@ -7,7 +7,7 @@
            
     },
  
-    "permissions": ["http://*/","https://*/"],
+    "permissions": ["http://*/","https://*/", "tabs"],
     "browser_action": {
           "default_icon": {
           },
