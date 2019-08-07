@@ -63,6 +63,7 @@ function RunScript(car) {
   car = car.replace(/a/g, "а");
   car = car.replace(/b/g, "б");
   car = car.replace(/v/g, "в");
+  car = car.replace(/w/g, "в");
   car = car.replace(/g/g, "г");
   car = car.replace(/d/g, "д");
   car = car.replace(/e/g, "е");
@@ -96,6 +97,7 @@ function RunScript(car) {
   car = car.replace(/йа/g, "я");
   car = car.replace(/û/g, "ю");
   car = car.replace(/â/g, "я");
+  car = car.replace(/q/g, "я");
   car = car.replace(/’/g, "ь"); //var
   car = car.replace(/'/g, "ь"); //var
   car = car.replace(/ʹ/g, "ь");
@@ -106,6 +108,7 @@ function RunScript(car) {
   car = car.replace(/A/g, "А");
   car = car.replace(/B/g, "Б");
   car = car.replace(/V/g, "В");
+  car = car.replace(/W/g, "В");
   car = car.replace(/G/g, "Г");
   car = car.replace(/D/g, "Д");
   car = car.replace(/E/g, "Е");
@@ -141,27 +144,25 @@ function RunScript(car) {
   car = car.replace(/[ÈÊ]/g, "Э");
   car = car.replace(/ЙУ/g, "Ю");
   car = car.replace(/ЙА/g, "Я");
+  car = car.replace(/Q/g, "Я");
   car = car.replace(/Йу/g, "Ю");
   car = car.replace(/Йа/g, "Я");
   car = car.replace(/Û/g, "Ю");
   car = car.replace(/Â/g, "Я");
   return car;
 }
-function copyDivToClipboardReply() {
-  document.getElementById("fieldWithResultCopy").innerHTML =
-    "Copied to Clipboard";
-}
 const eventHandler = () => {
-  
+    input = document.getElementById("fieldWithResult2").innerHTML ="";
     str = document.getElementById("textIN").value;
     if (str.includes("pidor")) {
       document.getElementById("fieldWithResult").innerHTML = "сам ты пидор";
     } else {
-      document.getElementById("fieldWithResult").innerHTML = RunScript(str);
+      var updetedText = document.getElementById("fieldWithResult").innerHTML = RunScript(str);
       checkWord(RunScript(str));
     }
     copyDivToClipboard();
-    copyDivToClipboardReply();
+    document.getElementById("fieldWithResultCopy").innerHTML = updetedText +
+  " Copied to Clipboard";
 }
 window.addEventListener("load", function load(event) {
   var runButton = document.getElementById("runButton");
@@ -178,6 +179,6 @@ window.addEventListener("load", function load(event) {
 window.addEventListener("load", function load(event) {
   far = window.getSelection().toString();
   checkWordWithCopy(RunScript(far));
-  copyDivToClipboardReply();
+  document.getElementById("fieldWithResultCopy").innerHTML = "Copied to Clipboard";
 });
 console.log("just to lazy to install phonetic library");
