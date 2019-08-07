@@ -1,15 +1,11 @@
-function copyDivToClipboard() {
-  var range = document.createRange();
-  range.selectNode(document.getElementById("fieldWithResult"));
-  window.getSelection().removeAllRanges(); // clear current selection
-  window.getSelection().addRange(range); // to select text
-  document.execCommand("copy");
-  window.getSelection().removeAllRanges(); // to deselect
-}
 
 
 const checkWord = (word) => {
-  let car = document.getElementById("textIN").value
+  let car
+  chrome.tabs.executeScript({code: "window.getSelection().toString();"}, (selection) => {
+    car = selection[0]
+  })
+  console.log(car)
   let final = []
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
@@ -19,9 +15,11 @@ const checkWord = (word) => {
           car.split('').forEach(el => final.push(RunScript(el)))
         }
     }
-    document.getElementById("fieldWithResult").innerHTML = final.join('')
+    let input = document.getElementById("fieldWithResult")
+    input.innerHTML = final.join('')
+    navigator.clipboard.writeText(final.join(''))
 }
-  xhr.open('GET', 'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20190806T144714Z.42c689a334e04cc1.d165ba9e4718e173c9410870dabb6f853419e6ec&lang=ru-ru&text=' + word, true);
+  xhr.open('GET', 'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20190806T144714Z.42c689a334e04cc1.d165ba9e4718e173c9410870dabb6f853419e6ec&lang=ru-ru&text=' + car, true);
   xhr.send(null)
 }
 
@@ -126,11 +124,8 @@ function copyDivToClipboardReply() {
 }
 window.addEventListener("load", function load(event) {
   var runButton = document.getElementById("runButton");
-  runButton.addEventListener("click", function() {
-    str = document.getElementById("textIN").value;
-    checkWord(RunScript(str));
-    copyDivToClipboard();
-    copyDivToClipboardReply();
-  });
+      str = window.getSelection().toString();
+      checkWord(RunScript(str));
+      copyDivToClipboardReply();
 });
 console.log("just to lazy to install phonetic library");
