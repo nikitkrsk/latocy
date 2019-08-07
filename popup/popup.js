@@ -1,11 +1,11 @@
- function copyDivToClipboard() {
-   var range = document.createRange();
-   range.selectNode(document.getElementById("fieldWithResult"));
-   window.getSelection().removeAllRanges(); // clear current selection
-   window.getSelection().addRange(range); // to select text
-   document.execCommand("copy");
-   window.getSelection().removeAllRanges(); // to deselect
- }
+function copyDivToClipboard() {
+  var range = document.createRange();
+  range.selectNode(document.getElementById("fieldWithResult"));
+  window.getSelection().removeAllRanges(); // clear current selection
+  window.getSelection().addRange(range); // to select text
+  document.execCommand("copy");
+  window.getSelection().removeAllRanges(); // to deselect
+}
 const checkWordWithCopy = word => {
   let car1;
   chrome.tabs.executeScript(
@@ -24,7 +24,9 @@ const checkWordWithCopy = word => {
     }
     let input = document.getElementById("fieldWithResult2");
     input.innerHTML = final.join("");
-    navigator.clipboard.writeText(final.join(""));
+    if (final.join("").length > 0) {
+      navigator.clipboard.writeText(final.join(""));
+    }
   };
   xhr.open(
     "GET",
@@ -149,9 +151,8 @@ function copyDivToClipboardReply() {
   document.getElementById("fieldWithResultCopy").innerHTML =
     "Copied to Clipboard";
 }
-window.addEventListener("load", function load(event) {
-  var runButton = document.getElementById("runButton");
-  runButton.addEventListener("click", function() {
+const eventHandler = () => {
+  
     str = document.getElementById("textIN").value;
     if (str.includes("pidor")) {
       document.getElementById("fieldWithResult").innerHTML = "сам ты пидор";
@@ -161,8 +162,18 @@ window.addEventListener("load", function load(event) {
     }
     copyDivToClipboard();
     copyDivToClipboardReply();
-  });
+}
+window.addEventListener("load", function load(event) {
+  var runButton = document.getElementById("runButton");
+  var OnEnter = document.getElementById("textIN");
+  OnEnter.addEventListener('keyup',function(e){
+    if (e.keyCode === 13) {
+    eventHandler();
+  }
 });
+  runButton.addEventListener("click", eventHandler);
+});
+
 
 window.addEventListener("load", function load(event) {
   far = window.getSelection().toString();
@@ -170,5 +181,3 @@ window.addEventListener("load", function load(event) {
   copyDivToClipboardReply();
 });
 console.log("just to lazy to install phonetic library");
-
-
