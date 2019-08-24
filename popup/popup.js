@@ -16,6 +16,7 @@ const checkWordWithCopy = word => {
   );
   let final = [];
   var xhr = new XMLHttpRequest();
+  
   xhr.onreadystatechange = function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       if (JSON.parse(xhr.response).def.length === 0) {
@@ -23,6 +24,7 @@ const checkWordWithCopy = word => {
       }
     }
     let input = document.getElementById("fieldWithResult2");
+    
     input.innerHTML = final.join("");
     if (final.join("").length > 0) {
       navigator.clipboard.writeText(final.join(""));
@@ -43,7 +45,6 @@ const checkWord = word => {
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
-      console.log(JSON.parse(xhr.response));
       if (JSON.parse(xhr.response).def.length === 0) {
         car.split("").forEach(el => final.push(RunScript(el)));
       }
@@ -92,7 +93,7 @@ function RunScript(car) {
   car = car.replace(/ŝ/g, "щ");
   car = car.replace(/шч/g, "щ");
   car = car.replace(/y/g, "ы");
-  car = car.replace(/[èê]/g, "э");
+  car = car.replace(/[``]/g, "э");
   car = car.replace(/йу/g, "ю");
   car = car.replace(/йа/g, "я");
   car = car.replace(/û/g, "ю");
@@ -141,7 +142,7 @@ function RunScript(car) {
   car = car.replace(/ШЧ/g, "Щ");
   car = car.replace(/Шч/g, "Щ");
   car = car.replace(/Y/g, "Ы");
-  car = car.replace(/[ÈÊ]/g, "Э");
+  car = car.replace(/[~]/g, "Э");
   car = car.replace(/ЙУ/g, "Ю");
   car = car.replace(/ЙА/g, "Я");
   car = car.replace(/Q/g, "Я");
@@ -151,34 +152,68 @@ function RunScript(car) {
   car = car.replace(/Â/g, "Я");
   return car;
 }
+
+//To do
+// const checkDuplicates = () =>{
+//   var textOne = document.getElementById("fieldWithResult").value
+//   var textTwo  = document.getElementById("fieldWithResult1").value
+//   var textThree = document.getElementById("fieldWithResult2").value
+
+//   if(textOne == textTwo){
+//     textTwo.innerHTML = ""
+//   }else if ( textOne == textThree){
+//     textThree.innerHTML = ""
+//   }
+// }
 const eventHandler = () => {
-    input = document.getElementById("fieldWithResult2").innerHTML ="";
-    str = document.getElementById("textIN").value;
-    if (str.includes("pidor")) {
-      document.getElementById("fieldWithResult").innerHTML = "сам ты пидор";
-    } else {
-      var updetedText = document.getElementById("fieldWithResult").innerHTML = RunScript(str);
-      checkWord(RunScript(str));
-    }
-    copyDivToClipboard();
-    document.getElementById("fieldWithResultCopy").innerHTML = updetedText +
-  " Copied to Clipboard";
-}
+  input = document.getElementById("fieldWithResult2").innerHTML = "";
+  str = document.getElementById("textIN").value;
+  if (str.includes("pidor")) {
+    document.getElementById("fieldWithResult").innerHTML = "сам ты пидор";
+  } else {
+    var updetedText = (document.getElementById(
+      "fieldWithResult"
+    ).innerHTML = RunScript(str));
+    checkWord(RunScript(str));
+  }
+  copyDivToClipboard();
+  document.getElementById("fieldWithResultCopy").innerHTML =
+    updetedText + " Copied to Clipboard";
+};
 window.addEventListener("load", function load(event) {
   var runButton = document.getElementById("runButton");
   var OnEnter = document.getElementById("textIN");
-  OnEnter.addEventListener('keyup',function(e){
+  OnEnter.addEventListener("keyup", function(e) {
     if (e.keyCode === 13) {
-    eventHandler();
-  }
-});
+      eventHandler();
+    }
+  });
   runButton.addEventListener("click", eventHandler);
 });
 
+window.addEventListener("load", function load(event) {
+  var runButton = document.getElementById("ABC");
+  runButton.addEventListener("click", function(e) {
+    var showHide = document.getElementById("ABCD");
+    if (showHide.style.display === "none") {
+      showHide.style.display = "grid";
+    } else {
+      showHide.style.display = "none";
+    }
+  });
+});
 
 window.addEventListener("load", function load(event) {
   far = window.getSelection().toString();
-  checkWordWithCopy(RunScript(far));
-  document.getElementById("fieldWithResultCopy").innerHTML = "Copied to Clipboard";
+  checkWordWithCopy(RunScript(far))
+  
 });
+
+//to do
+// window.addEventListener("load", function load(event) {
+//   var textExists = document.getElementById("fieldWithResult2").value
+//   if (textExists != null){
+//     document.getElementById("fieldWithResultCopy").innerHTML = " Copied to Clipboard";
+//   }
+// });
 console.log("just to lazy to install phonetic library");

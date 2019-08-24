@@ -58,3 +58,20 @@ p{
     float: right;
     padding: 2px;
 }
+#ABCD{
+    display: none;
+    grid-template-columns: repeat(6, minmax(10px, auto));
+    font-size: 10px;
+    
+}
+#ABC{
+    padding: 5px;
+    position: absolute;
+    top: 9%;
+    right: 2%;
+    background-color: black;
+    font-size: 0.8em;
+    color: white;
+    font-family: "Roboto", sans-serif;
+    box-shadow: none;
+}

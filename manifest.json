@@ -3,9 +3,9 @@
 
 "name": "LATOCY",
 "version": "1.0",    
-"icons": {
-       
-},
+"icons":{ "16": "images/logo.png",
+    "48": "images/logo.png",
+   "128": "images/logo.png" }, 
 
 "permissions": ["http://%2A/","https://*/", "tabs"],
 "browser_action": {
