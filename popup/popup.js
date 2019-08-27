@@ -1,4 +1,5 @@
-function copyDivToClipboard() {
+//copy to clipboard function
+const copyDivToClipboard = () => {
   var range = document.createRange();
   range.selectNode(document.getElementById("fieldWithResult"));
   window.getSelection().removeAllRanges(); // clear current selection
@@ -6,165 +7,183 @@ function copyDivToClipboard() {
   document.execCommand("copy");
   window.getSelection().removeAllRanges(); // to deselect
 }
+//checking with selecting text
 const checkWordWithCopy = word => {
-  let car1;
+  let letter;
   chrome.tabs.executeScript(
     { code: "window.getSelection().toString();" },
     selection => {
-      car1 = selection[0];
+      letter = selection[0];
+      document.getElementById("fieldWithResult").innerHTML = RunScript(letter);
     }
   );
   let final = [];
   var xhr = new XMLHttpRequest();
-  
+
   xhr.onreadystatechange = function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       if (JSON.parse(xhr.response).def.length === 0) {
-        car1.split("").forEach(el => final.push(RunScript(el)));
+        letter.split("").forEach(el => final.push(RunScript(el)));
       }
     }
     let input = document.getElementById("fieldWithResult2");
-    
-    input.innerHTML = final.join("");
+    //checking duplicates
+    let originalText = document.getElementById("fieldWithResult").innerHTML
+    if (originalText != final.join("")){    
+      input.innerHTML = final.join("");
+    }
     if (final.join("").length > 0) {
       navigator.clipboard.writeText(final.join(""));
+      document.getElementById("fieldWithResultCopy").innerHTML = final.join("") + 
+        " Copied to Clipboard";
     }
+    if (input.innerHTML != ""){
+      document.getElementById("fieldWithResultDescr").innerHTML = "other option:";
+    }else{
+      document.getElementById("fieldWithResultDescr").innerHTML = "";
+    }
+    
   };
   xhr.open(
     "GET",
     "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20190806T144714Z.42c689a334e04cc1.d165ba9e4718e173c9410870dabb6f853419e6ec&lang=ru-ru&text=" +
-      car1,
+      letter,
     true
   );
   xhr.send(null);
 };
-
+//checking inside extension
 const checkWord = word => {
-  let car = document.getElementById("textIN").value;
+  let letter = document.getElementById("textIN").value;
   let final = [];
   var xhr = new XMLHttpRequest();
+
   xhr.onreadystatechange = function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       if (JSON.parse(xhr.response).def.length === 0) {
-        car.split("").forEach(el => final.push(RunScript(el)));
+        letter.split("").forEach(el => final.push(RunScript(el)));
       }
     }
-    document.getElementById("fieldWithResult1").innerHTML = final.join("");
+
+    let originalText = document.getElementById("fieldWithResult").innerHTML
+    if (originalText != final.join("")){    
+      document.getElementById("fieldWithResult1").innerHTML = final.join("");
+     
+    }
+    if (document.getElementById("fieldWithResult1").innerHTML != ""){
+      document.getElementById("fieldWithResultDescr").innerHTML = "other option:";
+    }else{
+      document.getElementById("fieldWithResultDescr").innerHTML = "";
+    }
+    
   };
-  xhr.open(
-    "GET",
-    "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20190806T144714Z.42c689a334e04cc1.d165ba9e4718e173c9410870dabb6f853419e6ec&lang=ru-ru&text=" +
-      word,
-    true
-  );
+  let wordArray = [];
+  wordArray = word.split(" ");
+  wordArray.forEach(el => {
+    xhr.open(
+      "GET",
+      "https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20190806T144714Z.42c689a334e04cc1.d165ba9e4718e173c9410870dabb6f853419e6ec&lang=ru-ru&text=" +
+        el,
+      true
+    );
+  });
   xhr.send(null);
 };
-function RunScript(car) {
-  car = car.replace(/[hx]/g, "х");
-  car = car.replace(/a/g, "а");
-  car = car.replace(/b/g, "б");
-  car = car.replace(/v/g, "в");
-  car = car.replace(/w/g, "в");
-  car = car.replace(/g/g, "г");
-  car = car.replace(/d/g, "д");
-  car = car.replace(/e/g, "е");
-  car = car.replace(/[ëé]/g, "ё");
-  car = car.replace(/z/g, "з");
-  car = car.replace(/ž/g, "ж");
-  car = car.replace(/зх/g, "ж");
-  car = car.replace(/i/g, "и");
-  car = car.replace(/j/g, "й");
-  car = car.replace(/k/g, "к");
-  car = car.replace(/l/g, "л");
-  car = car.replace(/m/g, "м");
-  car = car.replace(/n/g, "н");
-  car = car.replace(/o/g, "о");
-  car = car.replace(/p/g, "п");
-  car = car.replace(/r/g, "р");
-  car = car.replace(/s/g, "с");
-  car = car.replace(/t/g, "т");
-  car = car.replace(/u/g, "у");
-  car = car.replace(/f/g, "ф");
-  car = car.replace(/c/g, "ц");
-  car = car.replace(/č/g, "ч");
-  car = car.replace(/цх/g, "ч");
-  car = car.replace(/š/g, "ш");
-  car = car.replace(/сх/g, "ш");
-  car = car.replace(/ŝ/g, "щ");
-  car = car.replace(/шч/g, "щ");
-  car = car.replace(/y/g, "ы");
-  car = car.replace(/[``]/g, "э");
-  car = car.replace(/йу/g, "ю");
-  car = car.replace(/йа/g, "я");
-  car = car.replace(/û/g, "ю");
-  car = car.replace(/â/g, "я");
-  car = car.replace(/q/g, "я");
-  car = car.replace(/’/g, "ь"); //var
-  car = car.replace(/'/g, "ь"); //var
-  car = car.replace(/ʹ/g, "ь");
-  car = car.replace(/ʺ/g, "ъ");
-  car = car.replace(/ьь/g, "ъ");
+//function to check word
+const RunScript = letter => {
+  letter = letter.replace(/[hx]/g, "х");
+  letter = letter.replace(/a/g, "а");
+  letter = letter.replace(/b/g, "б");
+  letter = letter.replace(/v/g, "в");
+  letter = letter.replace(/w/g, "в");
+  letter = letter.replace(/g/g, "г");
+  letter = letter.replace(/d/g, "д");
+  letter = letter.replace(/e/g, "е");
+  letter = letter.replace(/[ëé]/g, "ё");
+  letter = letter.replace(/z/g, "з");
+  letter = letter.replace(/ž/g, "ж");
+  letter = letter.replace(/зх/g, "ж");
+  letter = letter.replace(/i/g, "и");
+  letter = letter.replace(/j/g, "й");
+  letter = letter.replace(/k/g, "к");
+  letter = letter.replace(/l/g, "л");
+  letter = letter.replace(/m/g, "м");
+  letter = letter.replace(/n/g, "н");
+  letter = letter.replace(/o/g, "о");
+  letter = letter.replace(/p/g, "п");
+  letter = letter.replace(/r/g, "р");
+  letter = letter.replace(/s/g, "с");
+  letter = letter.replace(/t/g, "т");
+  letter = letter.replace(/u/g, "у");
+  letter = letter.replace(/f/g, "ф");
+  letter = letter.replace(/c/g, "ц");
+  letter = letter.replace(/č/g, "ч");
+  letter = letter.replace(/цх/g, "ч");
+  letter = letter.replace(/š/g, "ш");
+  letter = letter.replace(/сх/g, "ш");
+  letter = letter.replace(/ŝ/g, "щ");
+  letter = letter.replace(/шч/g, "щ");
+  letter = letter.replace(/y/g, "ы");
+  letter = letter.replace(/[``]/g, "э");
+  letter = letter.replace(/йу/g, "ю");
+  letter = letter.replace(/йа/g, "я");
+  letter = letter.replace(/û/g, "ю");
+  letter = letter.replace(/â/g, "я");
+  letter = letter.replace(/q/g, "я");
+  letter = letter.replace(/’/g, "ь"); 
+  letter = letter.replace(/'/g, "ь"); 
+  letter = letter.replace(/ʹ/g, "ь");
+  letter = letter.replace(/ʺ/g, "ъ");
+  letter = letter.replace(/ьь/g, "ъ");
 
-  car = car.replace(/[HX]/g, "Х");
-  car = car.replace(/A/g, "А");
-  car = car.replace(/B/g, "Б");
-  car = car.replace(/V/g, "В");
-  car = car.replace(/W/g, "В");
-  car = car.replace(/G/g, "Г");
-  car = car.replace(/D/g, "Д");
-  car = car.replace(/E/g, "Е");
-  car = car.replace(/Ë/g, "Ё");
-  car = car.replace(/Z/g, "З");
-  car = car.replace(/Ž/g, "Ж");
-  car = car.replace(/ЗХ/g, "Ж");
-  car = car.replace(/Зх/g, "Ж");
-  car = car.replace(/I/g, "И");
-  car = car.replace(/J/g, "Й");
-  car = car.replace(/K/g, "К");
-  car = car.replace(/L/g, "Л");
-  car = car.replace(/M/g, "М");
-  car = car.replace(/N/g, "Н");
-  car = car.replace(/O/g, "О");
-  car = car.replace(/P/g, "П");
-  car = car.replace(/R/g, "Р");
-  car = car.replace(/S/g, "С");
-  car = car.replace(/T/g, "Т");
-  car = car.replace(/U/g, "У");
-  car = car.replace(/F/g, "Ф");
-  car = car.replace(/C/g, "Ц");
-  car = car.replace(/Č/g, "Ч");
-  car = car.replace(/ЦХ/g, "Ч");
-  car = car.replace(/Цх/g, "Ч");
-  car = car.replace(/Š/g, "Ш");
-  car = car.replace(/СХ/g, "Ш");
-  car = car.replace(/Сх/g, "Ш");
-  car = car.replace(/Š/g, "Щ");
-  car = car.replace(/ШЧ/g, "Щ");
-  car = car.replace(/Шч/g, "Щ");
-  car = car.replace(/Y/g, "Ы");
-  car = car.replace(/[~]/g, "Э");
-  car = car.replace(/ЙУ/g, "Ю");
-  car = car.replace(/ЙА/g, "Я");
-  car = car.replace(/Q/g, "Я");
-  car = car.replace(/Йу/g, "Ю");
-  car = car.replace(/Йа/g, "Я");
-  car = car.replace(/Û/g, "Ю");
-  car = car.replace(/Â/g, "Я");
-  return car;
+  letter = letter.replace(/[HX]/g, "Х");
+  letter = letter.replace(/A/g, "А");
+  letter = letter.replace(/B/g, "Б");
+  letter = letter.replace(/V/g, "В");
+  letter = letter.replace(/W/g, "В");
+  letter = letter.replace(/G/g, "Г");
+  letter = letter.replace(/D/g, "Д");
+  letter = letter.replace(/E/g, "Е");
+  letter = letter.replace(/Ë/g, "Ё");
+  letter = letter.replace(/Z/g, "З");
+  letter = letter.replace(/Ž/g, "Ж");
+  letter = letter.replace(/ЗХ/g, "Ж");
+  letter = letter.replace(/Зх/g, "Ж");
+  letter = letter.replace(/I/g, "И");
+  letter = letter.replace(/J/g, "Й");
+  letter = letter.replace(/K/g, "К");
+  letter = letter.replace(/L/g, "Л");
+  letter = letter.replace(/M/g, "М");
+  letter = letter.replace(/N/g, "Н");
+  letter = letter.replace(/O/g, "О");
+  letter = letter.replace(/P/g, "П");
+  letter = letter.replace(/R/g, "Р");
+  letter = letter.replace(/S/g, "С");
+  letter = letter.replace(/T/g, "Т");
+  letter = letter.replace(/U/g, "У");
+  letter = letter.replace(/F/g, "Ф");
+  letter = letter.replace(/C/g, "Ц");
+  letter = letter.replace(/Č/g, "Ч");
+  letter = letter.replace(/ЦХ/g, "Ч");
+  letter = letter.replace(/Цх/g, "Ч");
+  letter = letter.replace(/Š/g, "Ш");
+  letter = letter.replace(/СХ/g, "Ш");
+  letter = letter.replace(/Сх/g, "Ш");
+  letter = letter.replace(/Š/g, "Щ");
+  letter = letter.replace(/ШЧ/g, "Щ");
+  letter = letter.replace(/Шч/g, "Щ");
+  letter = letter.replace(/Y/g, "Ы");
+  letter = letter.replace(/[~]/g, "Э");
+  letter = letter.replace(/ЙУ/g, "Ю");
+  letter = letter.replace(/ЙА/g, "Я");
+  letter = letter.replace(/Q/g, "Я");
+  letter = letter.replace(/Йу/g, "Ю");
+  letter = letter.replace(/Йа/g, "Я");
+  letter = letter.replace(/Û/g, "Ю");
+  letter = letter.replace(/Â/g, "Я");
+  return letter;
 }
-
-//To do
-// const checkDuplicates = () =>{
-//   var textOne = document.getElementById("fieldWithResult").value
-//   var textTwo  = document.getElementById("fieldWithResult1").value
-//   var textThree = document.getElementById("fieldWithResult2").value
-
-//   if(textOne == textTwo){
-//     textTwo.innerHTML = ""
-//   }else if ( textOne == textThree){
-//     textThree.innerHTML = ""
-//   }
-// }
+//display text inside extension
 const eventHandler = () => {
   input = document.getElementById("fieldWithResult2").innerHTML = "";
   str = document.getElementById("textIN").value;
@@ -174,12 +193,13 @@ const eventHandler = () => {
     var updetedText = (document.getElementById(
       "fieldWithResult"
     ).innerHTML = RunScript(str));
-    checkWord(RunScript(str));
+    checkWord(RunScript(str)); 
   }
   copyDivToClipboard();
   document.getElementById("fieldWithResultCopy").innerHTML =
     updetedText + " Copied to Clipboard";
 };
+//event listener on click or eneter
 window.addEventListener("load", function load(event) {
   var runButton = document.getElementById("runButton");
   var OnEnter = document.getElementById("textIN");
@@ -190,7 +210,12 @@ window.addEventListener("load", function load(event) {
   });
   runButton.addEventListener("click", eventHandler);
 });
-
+//event listener on selecting text
+window.addEventListener("load", function load(event) {
+  far = window.getSelection().toString();
+  checkWordWithCopy(RunScript(far));
+});
+//show info
 window.addEventListener("load", function load(event) {
   var runButton = document.getElementById("ABC");
   runButton.addEventListener("click", function(e) {
@@ -203,17 +228,4 @@ window.addEventListener("load", function load(event) {
   });
 });
 
-window.addEventListener("load", function load(event) {
-  far = window.getSelection().toString();
-  checkWordWithCopy(RunScript(far))
-  
-});
-
-//to do
-// window.addEventListener("load", function load(event) {
-//   var textExists = document.getElementById("fieldWithResult2").value
-//   if (textExists != null){
-//     document.getElementById("fieldWithResultCopy").innerHTML = " Copied to Clipboard";
-//   }
-// });
 console.log("just to lazy to install phonetic library");

@@ -48,6 +48,11 @@ p{
 #fieldWithResult{
     color: #3d8dac;
 }
+#fieldWithResultDescr{
+    font-size: 0.7em;
+    display: flex;
+    justify-content: center;
+}
 #fieldWithResultCopy{
     font-size: 0.7em;
     display: flex;
